@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartLearn - Subjects</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="logo">SmartLearn</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="subjects.html" class="active">Subjects</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Subjects</h1>
+    <p>Search for a subject, then open its practice set to revise quickly.</p>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Filter subjects... e.g. math"
+      aria-label="Filter subjects"
+    />
+    <p id="resultCount" class="muted"></p>
+
+    <div id="subjectGrid" class="card-grid">
+      <article class="card subject-card" data-name="mathematics math algebra geometry">
+        <h3>Mathematics</h3>
+        <p><strong>Topics:</strong> Algebra, Geometry, Fractions, Ratios</p>
+        <p>Learn to solve linear equations, understand angles and shapes, and work confidently with percentages and ratios.</p>
+        <button class="btn btn-small practice-btn" data-subject="Mathematics">Show Practice Set</button>
+        <div class="practice-set" hidden></div>
+      </article>
+
+      <article class="card subject-card" data-name="science biology chemistry physics">
+        <h3>Science</h3>
+        <p><strong>Topics:</strong> Cells, Chemical Reactions, Forces, Energy</p>
+        <p>Explore living things, basic chemistry, motion, electricity, and simple experiments you can understand at home.</p>
+        <button class="btn btn-small practice-btn" data-subject="Science">Show Practice Set</button>
+        <div class="practice-set" hidden></div>
+      </article>
+
+      <article class="card subject-card" data-name="english grammar writing literature">
+        <h3>English</h3>
+        <p><strong>Topics:</strong> Grammar, Comprehension, Essay Writing</p>
+        <p>Improve sentence structure, reading comprehension, vocabulary, and clear paragraph writing for exams.</p>
+        <button class="btn btn-small practice-btn" data-subject="English">Show Practice Set</button>
+        <div class="practice-set" hidden></div>
+      </article>
+
+      <article class="card subject-card" data-name="history civics world war">
+        <h3>History</h3>
+        <p><strong>Topics:</strong> Ancient Civilizations, Colonial Era, Independence</p>
+        <p>Understand timelines, causes and effects of major events, and key figures in local and world history.</p>
+        <button class="btn btn-small practice-btn" data-subject="History">Show Practice Set</button>
+        <div class="practice-set" hidden></div>
+      </article>
+    </div>
+
+    <p id="noResults" class="muted" hidden>No subjects match your search.</p>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 SmartLearn. Built for secondary school learners.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
