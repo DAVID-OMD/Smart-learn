@@ -44,7 +44,8 @@ if (searchInput) {
 
     subjectCards.forEach((card) => {
       const name = card.getAttribute("data-name") || "";
-      const title = card.querySelector("h3")?.textContent.toLowerCase() || "";
+      const heading = card.querySelector("h3");
+      const title = heading ? heading.textContent.toLowerCase() : "";
       const match = name.includes(query) || title.includes(query);
       card.hidden = !match;
       if (match) visible++;

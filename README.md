@@ -6,6 +6,16 @@ No frameworks, no build tools, no dependencies — just HTML, CSS, and JavaScrip
 
 ## Project Structure
 
+```
+Smart-learn/
+├── index.html      # Home page
+├── about.html      # About the website
+├── subjects.html   # Subjects with filter + practice sets
+├── styles.css      # Styling
+├── script.js       # Filtering + practice set toggle
+└── README.md
+```
+
 ## How to Run / Open
 
 1. Download or copy this project folder.
