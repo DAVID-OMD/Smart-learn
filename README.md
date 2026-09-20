@@ -10,9 +10,9 @@ No frameworks, no build tools, no dependencies — just HTML, CSS, and JavaScrip
 Smart-learn/
 ├── index.html      # Home page
 ├── about.html      # About the website
-├── subjects.html   # Subjects with filter + practice sets
-├── styles.css      # Styling
-├── script.js       # Filtering + practice set toggle
+├── subjects.html   # Subjects with filter + practice sets + quizzes
+├── styles.css      # Styling + dark mode
+├── script.js       # Theme, filtering, practice, quizzes, progress
 └── README.md
 ```
 
@@ -21,23 +21,24 @@ Smart-learn/
 1. Download or copy this project folder.
 2. Double-click `index.html` to open it in any web browser (Chrome, Edge, Firefox).
 3. Use the navigation bar to visit:
-   - `index.html` — Home page
-   - `about.html` — About the website
-   - `subjects.html` — List of subjects with search + practice sets
+   - `index.html` — Home page + random subject picker
+   - `about.html` — About + FAQ
+   - `subjects.html` — Filter, practice sets, quizzes, progress tracking
 
 No server or installation needed. It also works offline.
 
-## Features
+## Interactive Features
 
-- Clean homepage with quick links
-- About page explaining the project
-- Subjects page with:
-  - Live search/filter box
-  - Placeholder notes for Math, Science, English, History
-  - “Show Practice Set” buttons powered by `script.js`
+- **Dark mode** (`Dark mode` button in navbar, saved in localStorage)
+- **Live filter** (`subjects.html`) — searches titles, topics, and descriptions
+- **Practice sets** — “Show Practice Set” revision lists
+- **Quizzes** — “Start Quiz”: 3 multiple-choice questions per subject, instant feedback, explanations, score, retry, best score saved
+- **Progress tracking** — “Mark Complete” per subject, progress bar, home-page summary, all saved in browser
+- **Random picker** — “Random” highlights a subject; home page “Pick Random Subject” suggests one
+- **FAQ accordion** (`about.html`) using native `<details>`
 
 ## Customize
 
-- Edit `subjects.html` to add more subjects.
-- Edit `practiceData` in `script.js` to add more questions.
-- Edit `styles.css` to change colors/layout.
+- Edit `quizData` / `practiceData` in `script.js` to add questions.
+- Edit `subjects.html` to add more subjects (copy an `<article>` block, set `data-subject` + `data-name`).
+- Edit `styles.css` (`:root` variables) to change colors, including `body.dark`.

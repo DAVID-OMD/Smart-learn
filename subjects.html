@@ -15,52 +15,88 @@
         <li><a href="about.html">About</a></li>
         <li><a href="subjects.html" class="active">Subjects</a></li>
       </ul>
+      <button type="button" id="themeToggle" class="btn btn-small theme-btn" aria-label="Toggle dark mode">Dark mode</button>
     </nav>
   </header>
 
   <main class="container">
     <h1>Subjects</h1>
-    <p>Search for a subject, then open its practice set to revise quickly.</p>
+    <p>Search, revise, quiz yourself, and track completion.</p>
 
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Filter subjects... e.g. math"
-      aria-label="Filter subjects"
-    />
+    <div class="progress-wrap">
+      <div class="progress-bar" role="progressbar" aria-label="Completed subjects">
+        <div id="progressFill"></div>
+      </div>
+      <p id="progressText" class="muted"></p>
+    </div>
+
+    <div class="toolbar">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Filter subjects... e.g. algebra, grammar"
+        aria-label="Filter subjects"
+      />
+      <button type="button" id="randomSubjectBtn" class="btn btn-small">Random</button>
+      <button type="button" id="resetProgressBtn" class="btn btn-small btn-outline">Reset Progress</button>
+    </div>
     <p id="resultCount" class="muted"></p>
 
     <div id="subjectGrid" class="card-grid">
-      <article class="card subject-card" data-name="mathematics math algebra geometry">
-        <h3>Mathematics</h3>
+      <article class="card subject-card" data-name="mathematics math algebra geometry fractions ratios" data-subject="Mathematics">
+        <h3>Mathematics <span class="badge" data-complete-badge hidden>Done</span></h3>
         <p><strong>Topics:</strong> Algebra, Geometry, Fractions, Ratios</p>
         <p>Learn to solve linear equations, understand angles and shapes, and work confidently with percentages and ratios.</p>
-        <button type="button" class="btn btn-small practice-btn" data-subject="Mathematics">Show Practice Set</button>
+        <p class="muted best-score" data-best-score></p>
+        <div class="card-actions">
+          <button type="button" class="btn btn-small practice-btn" data-subject="Mathematics">Show Practice Set</button>
+          <button type="button" class="btn btn-small quiz-btn" data-subject="Mathematics">Start Quiz</button>
+          <button type="button" class="btn btn-small btn-outline complete-btn" data-subject="Mathematics">Mark Complete</button>
+        </div>
         <div class="practice-set" hidden></div>
+        <div class="quiz-box" hidden></div>
       </article>
 
-      <article class="card subject-card" data-name="science biology chemistry physics">
-        <h3>Science</h3>
+      <article class="card subject-card" data-name="science biology chemistry physics cells energy forces" data-subject="Science">
+        <h3>Science <span class="badge" data-complete-badge hidden>Done</span></h3>
         <p><strong>Topics:</strong> Cells, Chemical Reactions, Forces, Energy</p>
         <p>Explore living things, basic chemistry, motion, electricity, and simple experiments you can understand at home.</p>
-        <button type="button" class="btn btn-small practice-btn" data-subject="Science">Show Practice Set</button>
+        <p class="muted best-score" data-best-score></p>
+        <div class="card-actions">
+          <button type="button" class="btn btn-small practice-btn" data-subject="Science">Show Practice Set</button>
+          <button type="button" class="btn btn-small quiz-btn" data-subject="Science">Start Quiz</button>
+          <button type="button" class="btn btn-small btn-outline complete-btn" data-subject="Science">Mark Complete</button>
+        </div>
         <div class="practice-set" hidden></div>
+        <div class="quiz-box" hidden></div>
       </article>
 
-      <article class="card subject-card" data-name="english grammar writing literature">
-        <h3>English</h3>
+      <article class="card subject-card" data-name="english grammar writing literature comprehension essay" data-subject="English">
+        <h3>English <span class="badge" data-complete-badge hidden>Done</span></h3>
         <p><strong>Topics:</strong> Grammar, Comprehension, Essay Writing</p>
         <p>Improve sentence structure, reading comprehension, vocabulary, and clear paragraph writing for exams.</p>
-        <button type="button" class="btn btn-small practice-btn" data-subject="English">Show Practice Set</button>
+        <p class="muted best-score" data-best-score></p>
+        <div class="card-actions">
+          <button type="button" class="btn btn-small practice-btn" data-subject="English">Show Practice Set</button>
+          <button type="button" class="btn btn-small quiz-btn" data-subject="English">Start Quiz</button>
+          <button type="button" class="btn btn-small btn-outline complete-btn" data-subject="English">Mark Complete</button>
+        </div>
         <div class="practice-set" hidden></div>
+        <div class="quiz-box" hidden></div>
       </article>
 
-      <article class="card subject-card" data-name="history civics world war">
-        <h3>History</h3>
+      <article class="card subject-card" data-name="history civics ancient colonial independence timeline" data-subject="History">
+        <h3>History <span class="badge" data-complete-badge hidden>Done</span></h3>
         <p><strong>Topics:</strong> Ancient Civilizations, Colonial Era, Independence</p>
         <p>Understand timelines, causes and effects of major events, and key figures in local and world history.</p>
-        <button type="button" class="btn btn-small practice-btn" data-subject="History">Show Practice Set</button>
+        <p class="muted best-score" data-best-score></p>
+        <div class="card-actions">
+          <button type="button" class="btn btn-small practice-btn" data-subject="History">Show Practice Set</button>
+          <button type="button" class="btn btn-small quiz-btn" data-subject="History">Start Quiz</button>
+          <button type="button" class="btn btn-small btn-outline complete-btn" data-subject="History">Mark Complete</button>
+        </div>
         <div class="practice-set" hidden></div>
+        <div class="quiz-box" hidden></div>
       </article>
     </div>
 

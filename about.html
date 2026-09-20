@@ -15,6 +15,7 @@
         <li><a href="about.html" class="active">About</a></li>
         <li><a href="subjects.html">Subjects</a></li>
       </ul>
+      <button type="button" id="themeToggle" class="btn btn-small theme-btn" aria-label="Toggle dark mode">Dark mode</button>
     </nav>
   </header>
 
@@ -22,27 +23,42 @@
     <h1>About SmartLearn</h1>
     <p>
       SmartLearn is a lightweight learning website for secondary school students.
-      It provides short notes and practice questions for core subjects without
-      requiring logins, databases, or internet access.
+      It provides short notes, interactive quizzes, and progress tracking without
+      logins, databases, or internet access.
     </p>
 
     <h2>Our Goals</h2>
     <ul>
       <li>Make revision quick and accessible</li>
-      <li>Keep content clear and curriculum-friendly</li>
+      <li>Use active recall: quizzes with instant feedback</li>
       <li>Work on any device with a web browser</li>
     </ul>
 
     <h2>How It Works</h2>
     <ol>
       <li>Go to the <a href="subjects.html">Subjects page</a>.</li>
-      <li>Choose a subject like Math or Science.</li>
       <li>Read the summary and click “Show Practice Set”.</li>
+      <li>Click “Start Quiz” to test yourself and get a score.</li>
+      <li>Click “Mark Complete” — progress is saved automatically.</li>
     </ol>
 
-    <h2>For Teachers & Parents</h2>
+    <h2>FAQ</h2>
+    <details>
+      <summary>Do I need internet or an account?</summary>
+      <p>No. Just open <code>index.html</code>. Progress saves in your browser via localStorage.</p>
+    </details>
+    <details>
+      <summary>How are best scores stored?</summary>
+      <p>Per subject in your browser only. Use “Reset Progress” on the Subjects page to clear them.</p>
+    </details>
+    <details>
+      <summary>Can teachers add questions?</summary>
+      <p>Yes. Edit <code>quizData</code> and <code>practiceData</code> in <code>script.js</code> — no tools needed.</p>
+    </details>
+
+    <h2>For Teachers &amp; Parents</h2>
     <p>
-      All files are plain HTML, CSS, and JavaScript. You can copy the folder
+      All files are plain HTML, CSS, and JavaScript. Copy the folder
       to any computer or USB drive and open <code>index.html</code> to run it.
     </p>
   </main>
