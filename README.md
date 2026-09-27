@@ -12,7 +12,12 @@ Smart-learn/
 ├── about.html      # About the website
 ├── subjects.html   # Subjects with filter + practice sets + quizzes
 ├── styles.css      # Styling + dark mode
-├── script.js       # Theme, filtering, practice, quizzes, progress
+├── script.js       # Theme, mock users, filtering, practice, quizzes, progress
+├── design.html     # Design preview
+├── PRD.md          # Plan + notes
+├── db/
+│   ├── schema.sql  # Phase 2 local SQLite schema (mock)
+│   └── seed.sql    # Phase 2 mock seed
 └── README.md
 ```
 
@@ -33,9 +38,11 @@ No server or installation needed. It also works offline.
 - **Live filter** (`subjects.html`) — searches titles, topics, and descriptions
 - **Practice sets** — “Show Practice Set” revision lists
 - **Quizzes** — “Start Quiz”: 3 multiple-choice questions per subject, instant feedback, explanations, score, retry, best score saved
-- **Progress tracking** — “Mark Complete” per subject, progress bar, home-page summary, all saved in browser
+- **Progress tracking** — “Mark Complete” per subject, progress bar, home-page summary, all saved per mock user in browser
+- **Mock users (Phase 2)** — navbar switcher: Guest / Test Student / Demo Teacher, test data only, no passwords; progress/scores namespaced per user
 - **Random picker** — “Random” highlights a subject; home page “Pick Random Subject” suggests one
 - **FAQ accordion** (`about.html`) using native `<details>`
+- **Local DB design (Phase 2)** — `db/schema.sql` + `db/seed.sql` mirror the browser store in SQLite tables (`users`, `progress`, `scores`); real `smartlearn.db` stays local-only. Optional inspect: `sqlite3 smartlearn.db < db/schema.sql`
 
 ## Customize
 

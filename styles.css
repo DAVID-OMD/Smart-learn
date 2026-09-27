@@ -83,6 +83,28 @@ body.dark .navbar {
   color: #1e40af;
 }
 
+.nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.auth-label {
+  color: #dbeafe;
+  font-size: 0.85rem;
+}
+
+#userSelect {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #1e40af;
+}
+
 .theme-btn:hover {
   background: #dbeafe;
 }

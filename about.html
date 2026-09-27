@@ -15,7 +15,15 @@
         <li><a href="about.html" class="active">About</a></li>
         <li><a href="subjects.html">Subjects</a></li>
       </ul>
-      <button type="button" id="themeToggle" class="btn btn-small theme-btn" aria-label="Toggle dark mode">Dark mode</button>
+      <div class="nav-tools">
+        <label class="auth-label" for="userSelect">Mock user:</label>
+        <select id="userSelect" aria-label="Mock user">
+          <option value="guest">Guest</option>
+          <option value="test-student">Test Student</option>
+          <option value="demo-teacher">Demo Teacher</option>
+        </select>
+        <button type="button" id="themeToggle" class="btn btn-small theme-btn" aria-label="Toggle dark mode">Dark mode</button>
+      </div>
     </nav>
   </header>
 
@@ -36,16 +44,17 @@
 
     <h2>How It Works</h2>
     <ol>
+      <li>Pick a mock user in the navbar (Guest / Test Student / Demo Teacher — test data only).</li>
       <li>Go to the <a href="subjects.html">Subjects page</a>.</li>
       <li>Read the summary and click “Show Practice Set”.</li>
       <li>Click “Start Quiz” to test yourself and get a score.</li>
-      <li>Click “Mark Complete” — progress is saved automatically.</li>
+      <li>Click “Mark Complete” — progress is saved per mock user automatically.</li>
     </ol>
 
     <h2>FAQ</h2>
     <details>
       <summary>Do I need internet or an account?</summary>
-      <p>No. Just open <code>index.html</code>. Progress saves in your browser via localStorage.</p>
+      <p>No. Just open <code>index.html</code>. Pick a mock test user in the navbar — no passwords. Progress saves per mock user in your browser via localStorage.</p>
     </details>
     <details>
       <summary>How are best scores stored?</summary>

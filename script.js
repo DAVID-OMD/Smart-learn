@@ -82,12 +82,37 @@ function saveJSON(key, value) {
   });
 })();
 
-// ---- Progress (subjects + home) ----
-var COMPLETE_KEY = "smartlearn-complete";
-var SCORE_KEY = "smartlearn-scores";
+// ---- Phase 2 store: mock users + per-user progress (local only) ----
+// Local SQLite mirror: db/schema.sql tables users/progress/scores.
+// Browser adapter below uses the same shape in localStorage so the single
+// local page still opens by double-click. Swap SmartLearnStore internals
+// for sqlite3 (local file smartlearn.db, never committed) in Phase 2 full.
+var USER_KEY = "smartlearn-user";
+var MOCK_USERS = ["guest", "test-student", "demo-teacher"];
+var USER_NAMES = { guest: "Guest", "test-student": "Test Student", "demo-teacher": "Demo Teacher" };
 
-function getCompleted() { return loadJSON(COMPLETE_KEY, []); }
-function getScores() { return loadJSON(SCORE_KEY, {}); }
+function getUser() {
+  try {
+    var u = localStorage.getItem(USER_KEY);
+    return MOCK_USERS.indexOf(u) !== -1 ? u : "guest";
+  } catch (e) { return "guest"; }
+}
+
+function completeKey() { return "smartlearn-" + getUser() + "-complete"; }
+function scoreKey() { return "smartlearn-" + getUser() + "-scores"; }
+
+function getCompleted() {
+  var v = loadJSON(completeKey(), null);
+  if (v !== null) return v;
+  return loadJSON("smartlearn-complete", []); // migrate Phase 1 global key
+}
+function getScores() {
+  var v = loadJSON(scoreKey(), null);
+  if (v !== null) return v;
+  return loadJSON("smartlearn-scores", {}); // migrate Phase 1 global key
+}
+function saveCompleted(v) { saveJSON(completeKey(), v); }
+function saveScores(v) { saveJSON(scoreKey(), v); }
 
 function refreshProgressUI() {
   var cards = document.querySelectorAll(".subject-card");
@@ -128,7 +153,8 @@ function refreshProgressUI() {
   var home = document.getElementById("homeProgress");
   if (home) {
     var c2 = getCompleted();
-    home.textContent = c2.length ? ("Your progress: " + c2.length + " / 4 subjects completed.") : "Your progress: 0 / 4 — start on the Subjects page.";
+    var who = USER_NAMES[getUser()] || getUser();
+    home.textContent = c2.length ? (who + " progress: " + c2.length + " / 4 subjects completed.") : (who + " progress: 0 / 4 — start on the Subjects page.");
   }
 }
 
@@ -139,7 +165,7 @@ document.querySelectorAll(".complete-btn").forEach(function (btn) {
     var i = completed.indexOf(subject);
     if (i === -1) completed.push(subject);
     else completed.splice(i, 1);
-    saveJSON(COMPLETE_KEY, completed);
+    saveCompleted(completed);
     refreshProgressUI();
   });
 });
@@ -147,8 +173,20 @@ document.querySelectorAll(".complete-btn").forEach(function (btn) {
 var resetBtn = document.getElementById("resetProgressBtn");
 if (resetBtn) {
   resetBtn.addEventListener("click", function () {
-    saveJSON(COMPLETE_KEY, []);
-    saveJSON(SCORE_KEY, {});
+    saveCompleted([]);
+    saveScores({});
+    refreshProgressUI();
+  });
+}
+
+// ---- Mock auth wiring (test users only, no passwords) ----
+var userSelect = document.getElementById("userSelect");
+if (userSelect) {
+  userSelect.value = getUser();
+  userSelect.addEventListener("change", function () {
+    var v = userSelect.value;
+    if (MOCK_USERS.indexOf(v) === -1) v = "guest";
+    try { localStorage.setItem(USER_KEY, v); } catch (e) {}
     refreshProgressUI();
   });
 }
@@ -219,7 +257,7 @@ function renderQuiz(subject, box, button) {
       var prev = scores[subject] || 0;
       if (state.score > prev) {
         scores[subject] = state.score;
-        saveJSON(SCORE_KEY, scores);
+        saveScores(scores);
       }
       box.innerHTML =
         "<strong>" + subject + " Quiz complete!</strong>" +

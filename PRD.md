@@ -48,4 +48,10 @@ Test/mock data only. No real passwords, API keys, tokens, or `.env` files are in
 - `index.html` — prototype home page (opens locally)
 - `subjects.html` — prototype subjects + quizzes
 - `about.html`, `styles.css`, `script.js`, `README.md` — rest of prototype
+- `db/schema.sql`, `db/seed.sql` — Phase 2 local SQLite design (mock only)
 - Public repo: https://github.com/DAVID-OMD/Smart-learn
+
+## 11. Phase 2 Progress Update (started)
+- **Phase 2 — Local persistence upgrade [STARTED, prototype still local-only].** Added: mock user switcher in navbar (`Guest` / `Test Student` / `Demo Teacher`, test data only, no passwords) on all pages; per-user progress/scores namespaced in `localStorage` (`smartlearn-<user>-complete`, `smartlearn-<user>-scores`) with migration from Phase 1 global keys; local SQLite design files `db/schema.sql` (tables `users`, `progress`, `scores`) + `db/seed.sql` (mock seed). The real `smartlearn.db` file stays local-only and is never committed.
+- **How to run Phase 2 locally for now:** double-click `index.html` (same as Phase 1). Optional local DB inspect: `sqlite3 smartlearn.db < db/schema.sql` then `sqlite3 smartlearn.db < db/seed.sql` — still local, no server, no deployment.
+- **Submission status:** still satisfies Task 3 (single local page, mock data only). Next after Phase 2 full: Phase 3 `admin.html` teacher editing.
