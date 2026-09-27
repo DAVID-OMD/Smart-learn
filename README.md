@@ -14,6 +14,7 @@ Smart-learn/
 ├── styles.css      # Styling + dark mode
 ├── script.js       # Theme, mock users, filtering, practice, quizzes, progress
 ├── design.html     # Design preview
+├── admin.html      # Phase 3 teacher editing (local only)
 ├── PRD.md          # Plan + notes
 ├── db/
 │   ├── schema.sql  # Phase 2 local SQLite schema (mock)
@@ -43,6 +44,7 @@ No server or installation needed. It also works offline.
 - **Random picker** — “Random” highlights a subject; home page “Pick Random Subject” suggests one
 - **FAQ accordion** (`about.html`) using native `<details>`
 - **Local DB design (Phase 2)** — `db/schema.sql` + `db/seed.sql` mirror the browser store in SQLite tables (`users`, `progress`, `scores`); real `smartlearn.db` stays local-only. Optional inspect: `sqlite3 smartlearn.db < db/schema.sql`
+- **Teacher editing (Phase 3)** — `admin.html` (local only): add/delete custom quiz questions per mock user, export/import JSON (`smartlearn-custom-quiz.json`); custom questions appear in subject quizzes
 
 ## Customize
 

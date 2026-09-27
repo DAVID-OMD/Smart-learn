@@ -348,6 +348,47 @@ details {
   margin: 0.6rem 0;
 }
 
+.form-row {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.7rem 0;
+}
+
+.form-row label {
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.form-row input[type="text"],
+.form-row select,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.55rem 0.7rem;
+  width: 100%;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+main .card + .card {
+  margin-top: 1rem;
+}
+
+.custom-item {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  margin: 0.6rem 0;
+  background: var(--card);
+}
+
 summary {
   cursor: pointer;
   font-weight: bold;

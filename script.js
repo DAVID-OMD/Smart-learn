@@ -114,6 +114,25 @@ function getScores() {
 function saveCompleted(v) { saveJSON(completeKey(), v); }
 function saveScores(v) { saveJSON(scoreKey(), v); }
 
+// ---- Phase 3: custom teacher questions (local only, per mock user) ----
+function customKey() { return "smartlearn-" + getUser() + "-custom-quiz"; }
+function getCustomQuiz() {
+  var v = loadJSON(customKey(), null);
+  return v && typeof v === "object" ? v : {};
+}
+function saveCustomQuiz(v) { saveJSON(customKey(), v); }
+function getQuizQuestions(subject) {
+  var base = quizData[subject] || [];
+  var custom = getCustomQuiz()[subject] || [];
+  return base.concat(custom);
+}
+function isValidQuizItem(item) {
+  return item && typeof item.q === "string" && item.q.trim().length > 0 &&
+    Array.isArray(item.options) && item.options.length === 3 &&
+    item.options.every(function (o) { return typeof o === "string" && o.trim().length > 0; }) &&
+    (item.answer === 0 || item.answer === 1 || item.answer === 2);
+}
+
 function refreshProgressUI() {
   var cards = document.querySelectorAll(".subject-card");
   var completed = getCompleted();
@@ -133,7 +152,7 @@ function refreshProgressUI() {
     }
     if (scoreEl) {
       var best = scores[subject];
-      scoreEl.textContent = (best !== undefined) ? ("Best quiz score: " + best + " / " + (quizData[subject] || []).length) : "";
+      scoreEl.textContent = (best !== undefined) ? ("Best quiz score: " + best + " / " + getQuizQuestions(subject).length) : "";
     }
   });
 
@@ -246,7 +265,7 @@ document.querySelectorAll(".practice-btn").forEach(function (button) {
 
 // ---- Quizzes ----
 function renderQuiz(subject, box, button) {
-  var questions = quizData[subject] || [];
+  var questions = getQuizQuestions(subject);
   var state = { index: 0, score: 0 };
   box.hidden = false;
   if (button) button.textContent = "Hide Quiz";
@@ -352,5 +371,166 @@ if (randomBtn && randomPick) {
     randomPick.textContent = "Try this: " + pick + " — open Subjects and start its quiz!";
   });
 }
+
+// ---- Phase 3 admin page (local only) ----
+(function initAdmin() {
+  var form = document.getElementById("addQuestionForm");
+  if (!form) return; // only on admin.html
+  var subjectEl = document.getElementById("qSubject");
+  var textEl = document.getElementById("qText");
+  var optEls = [document.getElementById("qOpt0"), document.getElementById("qOpt1"), document.getElementById("qOpt2")];
+  var answerEl = document.getElementById("qAnswer");
+  var explainEl = document.getElementById("qExplain");
+  var msgEl = document.getElementById("addQuestionMsg");
+  var listEl = document.getElementById("customList");
+  var filterEl = document.getElementById("adminFilter");
+  var noteEl = document.getElementById("adminUserNote");
+  var exportEl = document.getElementById("exportText");
+  var importEl = document.getElementById("importText");
+  var importMsg = document.getElementById("importMsg");
+
+  function paintNote() {
+    if (noteEl) noteEl.textContent = "Editing as " + (USER_NAMES[getUser()] || getUser()) + " — custom questions are stored in this browser only.";
+  }
+
+  function paintExport() {
+    if (exportEl) exportEl.value = JSON.stringify(getCustomQuiz(), null, 2);
+  }
+
+  function paintList() {
+    paintNote();
+    paintExport();
+    var data = getCustomQuiz();
+    var filter = filterEl ? filterEl.value : "";
+    var subjects = Object.keys(data).filter(function (s) { return !filter || s === filter; });
+    var total = 0;
+    subjects.forEach(function (s) { total += (data[s] || []).length; });
+    if (!total) {
+      listEl.innerHTML = "<p class='muted'>No custom questions yet for this mock user. Add one above.</p>";
+      return;
+    }
+    var html = "";
+    subjects.forEach(function (s) {
+      (data[s] || []).forEach(function (item, i) {
+        html += "<div class='custom-item'><strong>" + s + " #" + (i + 1) + ":</strong> " + item.q +
+          "<br /><span class='muted'>A) " + item.options[0] + " · B) " + item.options[1] + " · C) " + item.options[2] +
+          " — correct: " + ["A", "B", "C"][item.answer] + "</span>" +
+          "<br /><button type='button' class='btn btn-small btn-outline' data-del-subject='" + s + "' data-del-index='" + i + "'>Delete</button></div>";
+      });
+    });
+    listEl.innerHTML = html;
+    listEl.querySelectorAll("[data-del-subject]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var d = getCustomQuiz();
+        var s = b.getAttribute("data-del-subject");
+        var idx = parseInt(b.getAttribute("data-del-index"), 10);
+        if (d[s]) d[s].splice(idx, 1);
+        if (d[s] && !d[s].length) delete d[s];
+        saveCustomQuiz(d);
+        paintList();
+        refreshProgressUI();
+      });
+    });
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var item = {
+      q: textEl.value.trim(),
+      options: [optEls[0].value.trim(), optEls[1].value.trim(), optEls[2].value.trim()],
+      answer: parseInt(answerEl.value, 10),
+      explain: explainEl.value.trim()
+    };
+    if (!isValidQuizItem(item)) {
+      msgEl.textContent = "Fill the question and all 3 options.";
+      return;
+    }
+    var d = getCustomQuiz();
+    var s = subjectEl.value;
+    if (!d[s]) d[s] = [];
+    d[s].push(item);
+    saveCustomQuiz(d);
+    form.reset();
+    msgEl.textContent = "Added to " + s + " for " + (USER_NAMES[getUser()] || getUser()) + ". It now appears in that subject's quiz.";
+    paintList();
+    refreshProgressUI();
+  });
+
+  if (filterEl) filterEl.addEventListener("change", paintList);
+
+  var clearBtn = document.getElementById("clearCustomBtn");
+  if (clearBtn) clearBtn.addEventListener("click", function () {
+    saveCustomQuiz({});
+    paintList();
+    refreshProgressUI();
+  });
+
+  var exportBtn = document.getElementById("exportBtn");
+  if (exportBtn) exportBtn.addEventListener("click", paintExport);
+
+  var copyBtn = document.getElementById("copyExportBtn");
+  if (copyBtn) copyBtn.addEventListener("click", function () {
+    paintExport();
+    try {
+      exportEl.select();
+      document.execCommand("copy");
+    } catch (e) {}
+  });
+
+  var dlBtn = document.getElementById("downloadExportBtn");
+  if (dlBtn) dlBtn.addEventListener("click", function () {
+    paintExport();
+    var blob = new Blob([exportEl.value || "{}"], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "smartlearn-custom-quiz.json";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { document.body.removeChild(a); }, 100);
+  });
+
+  var fileInput = document.getElementById("importFile");
+  if (fileInput) fileInput.addEventListener("change", function () {
+    var f = fileInput.files && fileInput.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () { importEl.value = String(r.result || ""); };
+    r.readAsText(f);
+  });
+
+  var importBtn = document.getElementById("importBtn");
+  if (importBtn) importBtn.addEventListener("click", function () {
+    try {
+      var parsed = JSON.parse(importEl.value || "{}");
+      var clean = {};
+      Object.keys(parsed).forEach(function (s) {
+        if (!quizData[s]) return;
+        var arr = Array.isArray(parsed[s]) ? parsed[s] : [];
+        arr.forEach(function (item) {
+          if (isValidQuizItem(item)) {
+            if (!clean[s]) clean[s] = [];
+            clean[s].push({ q: item.q.trim(), options: item.options.map(function (o) { return o.trim(); }), answer: item.answer, explain: String(item.explain || "") });
+          }
+        });
+      });
+      var current = getCustomQuiz();
+      Object.keys(clean).forEach(function (s) {
+        if (!current[s]) current[s] = [];
+        current[s] = current[s].concat(clean[s]);
+      });
+      saveCustomQuiz(current);
+      importMsg.textContent = "Imported custom questions for " + (USER_NAMES[getUser()] || getUser()) + ".";
+      importEl.value = "";
+      paintList();
+      refreshProgressUI();
+    } catch (e) {
+      importMsg.textContent = "Invalid JSON — nothing imported.";
+    }
+  });
+
+  if (userSelect) userSelect.addEventListener("change", paintList);
+
+  paintList();
+})();
 
 refreshProgressUI();

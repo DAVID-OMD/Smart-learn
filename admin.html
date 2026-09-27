@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartLearn - Admin (local only)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="logo">SmartLearn</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="subjects.html">Subjects</a></li>
+        <li><a href="admin.html" class="active">Admin</a></li>
+      </ul>
+      <div class="nav-tools">
+        <label class="auth-label" for="userSelect">Mock user:</label>
+        <select id="userSelect" aria-label="Mock user">
+          <option value="guest">Guest</option>
+          <option value="test-student">Test Student</option>
+          <option value="demo-teacher">Demo Teacher</option>
+        </select>
+        <button type="button" id="themeToggle" class="btn btn-small theme-btn" aria-label="Toggle dark mode">Dark mode</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Teacher editing <span class="muted">(local only)</span></h1>
+    <p class="muted">Mock data only. Custom questions save per mock user in this browser. Built-in questions in <code>script.js</code> are never modified. Use Export/Import to share JSON.</p>
+    <p id="adminUserNote" class="muted" aria-live="polite"></p>
+
+    <section class="card">
+      <h2>Add a quiz question</h2>
+      <form id="addQuestionForm">
+        <div class="form-row">
+          <label for="qSubject">Subject</label>
+          <select id="qSubject">
+            <option>Mathematics</option>
+            <option>Science</option>
+            <option>English</option>
+            <option>History</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="qText">Question</label>
+          <input type="text" id="qText" maxlength="200" placeholder="e.g. What is 7 x 8?" required />
+        </div>
+        <div class="form-row">
+          <label for="qOpt0">Option A</label>
+          <input type="text" id="qOpt0" maxlength="100" required />
+        </div>
+        <div class="form-row">
+          <label for="qOpt1">Option B</label>
+          <input type="text" id="qOpt1" maxlength="100" required />
+        </div>
+        <div class="form-row">
+          <label for="qOpt2">Option C</label>
+          <input type="text" id="qOpt2" maxlength="100" required />
+        </div>
+        <div class="form-row">
+          <label for="qAnswer">Correct option</label>
+          <select id="qAnswer">
+            <option value="0">A</option>
+            <option value="1">B</option>
+            <option value="2">C</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="qExplain">Explanation (optional)</label>
+          <input type="text" id="qExplain" maxlength="200" placeholder="Why is it correct?" />
+        </div>
+        <button type="submit" class="btn">Add Question</button>
+        <p id="addQuestionMsg" class="muted" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Custom questions</h2>
+      <div class="toolbar">
+        <select id="adminFilter" aria-label="Filter custom questions by subject">
+          <option value="">All subjects</option>
+          <option>Mathematics</option>
+          <option>Science</option>
+          <option>English</option>
+          <option>History</option>
+        </select>
+        <button type="button" id="clearCustomBtn" class="btn btn-small btn-outline">Delete All Custom</button>
+      </div>
+      <div id="customList"></div>
+    </section>
+
+    <section class="card">
+      <h2>Export / Import JSON</h2>
+      <div class="toolbar">
+        <button type="button" id="exportBtn" class="btn btn-small">Refresh Export</button>
+        <button type="button" id="copyExportBtn" class="btn btn-small btn-outline">Copy</button>
+        <button type="button" id="downloadExportBtn" class="btn btn-small btn-outline">Download .json</button>
+      </div>
+      <label for="exportText">Export (custom questions for current mock user)</label>
+      <textarea id="exportText" rows="6" readonly></textarea>
+      <label for="importText">Import (paste JSON, then Import)</label>
+      <textarea id="importText" rows="6" placeholder='{"Mathematics": [{"q": "...", "options": ["a","b","c"], "answer": 0}]}'></textarea>
+      <div class="toolbar">
+        <label class="btn btn-small btn-outline" for="importFile">Choose .json file</label>
+        <input type="file" id="importFile" accept=".json,application/json" hidden />
+        <button type="button" id="importBtn" class="btn btn-small">Import</button>
+      </div>
+      <p id="importMsg" class="muted" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 SmartLearn. Built for secondary school learners.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
