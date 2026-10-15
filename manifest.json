@@ -6,14 +6,32 @@
   "lang": "en",
   "dir": "ltr",
   "categories": ["education"],
+  "iarc_rating_id": "REPLACE_WITH_IARC_ID",
+  "prefer_related_applications": false,
+  "related_applications": [],
   "start_url": "./index.html",
   "scope": "./",
+  "scope_extensions": [],
   "display": "standalone",
-  "display_override": ["window-controls-overlay"],
+  "display_override": ["tabbed", "window-controls-overlay"],
   "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#1e40af",
-  "prefer_related_applications": false,
+  "launch_handler": { "client_mode": "focus-existing" },
+  "edge_side_panel": { "preferred_width": 480 },
+  "note_taking": { "new_note_url": "./admin.html" },
+  "protocol_handlers": [
+    { "protocol": "web+smartlearn", "url": "./lessons.html?highlight=%s" }
+  ],
+  "share_target": {
+    "action": "./lessons.html",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": { "title": "title", "text": "text", "url": "url" }
+  },
+  "file_handlers": [
+    { "action": "./admin.html", "accept": { "application/json": [".json"] } }
+  ],
   "icons": [
     {
       "src": "icons/icon-192.png",
@@ -52,6 +70,20 @@
       "name": "Take Quizzes",
       "url": "./subjects.html",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "widgets": [
+    {
+      "name": "SmartLearn Today",
+      "description": "Study suggestion and progress at a glance.",
+      "tag": "smartlearn-today",
+      "start_url": "./widget.html",
+      "screenshots": [
+        { "src": "screenshots/home-mobile.png", "sizes": "390x844" }
+      ],
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }],
+      "auth": false,
+      "update": 3600
     }
   ]
 }

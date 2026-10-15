@@ -544,6 +544,39 @@ if (randomBtn && randomPick) {
     r.readAsText(f);
   });
 
+  // Manifest file_handlers: opening a .json with the installed app lands here
+  if ("launchQueue" in window && window.launchQueue && window.launchQueue.setConsumer) {
+    window.launchQueue.setConsumer(function (launchParams) {
+      if (!launchParams.files || !launchParams.files.length) return;
+      var fh = launchParams.files[0];
+      if (fh.text) {
+        fh.text().then(function (t) {
+          importEl.value = String(t || "");
+          importMsg.textContent = "Loaded '" + (fh.name || "file") + "' — press Import.";
+        }).catch(function () {});
+      }
+    });
+  }
+
+  // Manifest share_target: prefill lesson form from a shared link draft
+  try {
+    var draftRaw = sessionStorage.getItem("smartlearn-lesson-draft");
+    if (draftRaw) {
+      sessionStorage.removeItem("smartlearn-lesson-draft");
+      var draft = JSON.parse(draftRaw);
+      var dTitle = document.getElementById("lTitle");
+      var dUrl = document.getElementById("lUrl");
+      var dType = document.getElementById("lType");
+      var dMsg = document.getElementById("addLessonMsg");
+      if (dTitle && draft.title) dTitle.value = String(draft.title).slice(0, 120);
+      if (dUrl && draft.url) {
+        dUrl.value = String(draft.url).slice(0, 500);
+        if (dType && /youtu/.test(String(draft.url))) dType.value = "youtube";
+      }
+      if (dMsg) dMsg.textContent = "Prefilled from shared link — press Publish Lesson.";
+    }
+  } catch (e) {}
+
   var importBtn = document.getElementById("importBtn");
   if (importBtn) importBtn.addEventListener("click", function () {
     try {
@@ -588,6 +621,37 @@ if (randomBtn && randomPick) {
   var countEl = document.getElementById("lessonCount");
   var emptyEl = document.getElementById("lessonEmpty");
   var progEl = document.getElementById("lessonProgress");
+  var shareNotice = document.getElementById("shareNotice");
+  var pendingHighlight = null;
+
+  // Protocol handler + shared content (manifest protocol_handlers / share_target)
+  try {
+    var pageParams = new URLSearchParams(window.location.search);
+    var hl = pageParams.get("highlight");
+    if (hl) {
+      var hlm = String(hl).match(/lesson\/([A-Za-z0-9_-]+)/);
+      pendingHighlight = hlm ? hlm[1] : hl;
+    }
+    var sharedUrl = pageParams.get("url") || "";
+    var sharedText = pageParams.get("text") || "";
+    var sharedTitle = pageParams.get("title") || "";
+    var sharedBody = (sharedUrl || sharedText).trim();
+    if (sharedBody && shareNotice) {
+      shareNotice.hidden = false;
+      shareNotice.innerHTML = "<strong>Shared link received:</strong> " + escapeHtml(sharedUrl || sharedText) +
+        "<br /><button type='button' class='btn btn-small' id='shareToAdminBtn'>Send to Admin as lesson draft</button>";
+      var shareBtn = document.getElementById("shareToAdminBtn");
+      if (shareBtn) shareBtn.addEventListener("click", function () {
+        try {
+          sessionStorage.setItem("smartlearn-lesson-draft", JSON.stringify({
+            title: (sharedTitle || sharedText.slice(0, 80) || "Shared lesson"),
+            url: (sharedUrl || sharedText)
+          }));
+        } catch (e) {}
+        window.location.href = "admin.html";
+      });
+    }
+  } catch (e) {}
 
   function playerHtml(lesson) {
     if (lesson.type === "youtube") {
@@ -635,6 +699,15 @@ if (randomBtn && randomPick) {
         paint();
       });
     });
+    if (pendingHighlight) {
+      var target = grid.querySelector("[data-lesson-id='" + pendingHighlight + "']");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.classList.add("flash");
+        setTimeout(function () { target.classList.remove("flash"); }, 1200);
+      }
+      pendingHighlight = null;
+    }
   }
 
   if (searchEl) searchEl.addEventListener("input", paint);

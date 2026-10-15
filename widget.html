@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartLearn Today</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container" style="padding:1rem">
+    <h1 style="font-size:1.3rem">SmartLearn Today</h1>
+    <p id="widgetLine" class="muted">Open SmartLearn to continue learning.</p>
+    <p><a class="btn btn-small" href="index.html">Open SmartLearn</a></p>
+  </main>
+  <script>
+    // Manifest widgets entry target: tiny glanceable summary (mock data only).
+    try {
+      var done = JSON.parse(localStorage.getItem("smartlearn-guest-complete") || "[]").length;
+      var el = document.getElementById("widgetLine");
+      if (el) el.textContent = done
+        ? ("Progress: " + done + " of 4 subjects completed. Keep going!")
+        : "Tip: watch one video lesson, then take its quiz.";
+    } catch (e) {}
+  </script>
+</body>
+</html>

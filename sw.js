@@ -14,7 +14,8 @@ var SHELL = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./screenshots/lessons-wide.png",
-  "./screenshots/home-mobile.png"
+  "./screenshots/home-mobile.png",
+  "./widget.html"
 ];
 
 self.addEventListener("install", function (event) {
