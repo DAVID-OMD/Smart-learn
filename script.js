@@ -810,7 +810,50 @@ if (randomBtn && randomPick) {
   var proto = window.location.protocol;
   if (proto !== "http:" && proto !== "https:") return;
   window.addEventListener("load", function () {
-    navigator.serviceWorker.register("sw.js").catch(function () {});
+    navigator.serviceWorker.register("sw.js").then(function (reg) {
+      window.SmartLearnSW = reg;
+      try {
+        if ("periodicSync" in reg) {
+          reg.periodicSync.register("smartlearn-refresh", { minInterval: 24 * 60 * 60 * 1000 }).catch(function () {});
+        } else if ("sync" in reg) {
+          reg.sync.register("smartlearn-sync").catch(function () {});
+        }
+      } catch (e) {}
+    }).catch(function () {});
+  });
+})();
+
+// ---- Study reminders (local demo; remote push needs backend + VAPID — Phase 4) ----
+(function initReminders() {
+  var btn = document.getElementById("reminderBtn");
+  if (!btn) return; // only on index.html
+  var msg = document.getElementById("reminderMsg");
+  btn.addEventListener("click", function () {
+    if (!("Notification" in window)) {
+      msg.textContent = "Notifications are not supported in this browser.";
+      return;
+    }
+    Notification.requestPermission().then(function (perm) {
+      if (perm !== "granted") {
+        msg.textContent = "Permission denied — reminders stay off.";
+        return;
+      }
+      msg.textContent = "Reminders on — demo reminder appears in 10 seconds.";
+      setTimeout(function () {
+        var show = function (reg) {
+          reg.showNotification("SmartLearn reminder", {
+            body: "Time to revise: watch one lesson, then take its quiz.",
+            icon: "icons/icon-192.png",
+            tag: "smartlearn-reminder"
+          });
+        };
+        if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+          navigator.serviceWorker.ready.then(show).catch(function () {});
+        } else if (window.SmartLearnSW) {
+          show(window.SmartLearnSW);
+        }
+      }, 10000);
+    });
   });
 })();
 

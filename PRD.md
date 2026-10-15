@@ -67,3 +67,13 @@ Test/mock data only. No real passwords, API keys, tokens, or `.env` files are in
 ## 14. PWABuilder Full Pass (all 22 action items)
 - Manifest now covers: service worker (`sw.js`, offline shell incl. `widget.html`), screenshots (wide 1280x720 + narrow 390x844), orientation portrait, app id, categories education, `prefer_related_applications: false` (PWA, no native app yet) + empty `related_applications`, `iarc_rating_id` placeholder (replace with free rating from globalratings.com before store submission), `display_override: [tabbed, window-controls-overlay]`, `lang: en`, `dir: ltr`, empty `scope_extensions` (no extra domains needed), shortcuts (Watch Lessons / Take Quizzes), `file_handlers` (.json opens Admin; `launchQueue` loads file into import box), `launch_handler: focus-existing` (single instance), `protocol_handlers` (`web+smartlearn://` deep-links to a lesson highlight on `lessons.html`), `share_target` (shared links land on `lessons.html` with a send-to-Admin draft via `sessionStorage`), widgets (`smartlearn-today` backed by `widget.html`), `edge_side_panel` (width 480), `note_taking` (new-note URL = `admin.html`), tabbed + windows-control-overlay display modes.
 - All handlers are wired in `script.js`, not manifest-only. After Pages rebuilds, re-run the validator to clear the list.
+
+## 15. PWA Round 2 (validator items 1-8, second pass)
+- `related_applications`: Play entry added with `REPLACE_WITH_PLAY_APPLICATION_ID` — after PWABuilder generates the AAB and it is uploaded to Play Console, paste the real applicationId there (and optionally flip `prefer_related_applications` to true).
+- IARC: value is `PENDING_COMPLETE_IARC_QUESTIONNAIRE` — complete the free questionnaire at globalratings.com, paste the real ID, required before store submission.
+- `scope_extensions`: the two video origins (`w3schools.com`, `interactive-examples.mdn.mozilla.net`) so lesson video navigation stays in-app on supporting browsers.
+- Widget: entry now has labelled screenshot; backed by real `widget.html` (progress glance + open-app link).
+- `display_override`: `tabbed` first with `window-controls-overlay` fallback — confirmed present, needs validator re-run to clear.
+- Periodic Background Sync: `periodicsync` handler refreshes the cached shell daily; page registers `smartlearn-refresh` (installed app only, failures ignored).
+- Background Sync: `sync` handler (`smartlearn-sync`) refreshes the shell when connectivity returns; registered as fallback where periodic sync is unavailable.
+- Push: `push` + `notificationclick` handlers show reminders and focus/open the app. No backend yet, so `index.html` has Enable Study Reminders (local 10-second demo via SW `showNotification`); remote push needs server + VAPID keys (Phase 4).

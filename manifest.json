@@ -6,12 +6,21 @@
   "lang": "en",
   "dir": "ltr",
   "categories": ["education"],
-  "iarc_rating_id": "REPLACE_WITH_IARC_ID",
+  "iarc_rating_id": "PENDING_COMPLETE_IARC_QUESTIONNAIRE",
   "prefer_related_applications": false,
-  "related_applications": [],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=REPLACE_WITH_PLAY_APPLICATION_ID",
+      "id": "REPLACE_WITH_PLAY_APPLICATION_ID"
+    }
+  ],
   "start_url": "./index.html",
   "scope": "./",
-  "scope_extensions": [],
+  "scope_extensions": [
+    { "origin": "https://www.w3schools.com" },
+    { "origin": "https://interactive-examples.mdn.mozilla.net" }
+  ],
   "display": "standalone",
   "display_override": ["tabbed", "window-controls-overlay"],
   "orientation": "portrait",
@@ -79,7 +88,7 @@
       "tag": "smartlearn-today",
       "start_url": "./widget.html",
       "screenshots": [
-        { "src": "screenshots/home-mobile.png", "sizes": "390x844" }
+        { "src": "screenshots/home-mobile.png", "sizes": "390x844", "label": "SmartLearn Today widget" }
       ],
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }],
       "auth": false,
