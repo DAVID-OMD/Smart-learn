@@ -133,6 +133,52 @@ function isValidQuizItem(item) {
     (item.answer === 0 || item.answer === 1 || item.answer === 2);
 }
 
+// ---- Video lessons: learn part (tutors upload, students watch) ----
+// Shared library: seed lessons in code + tutor uploads in one shared
+// localStorage key so every mock user sees the same library (like a class
+// channel). Watch state stays per mock user. Video bytes never stored.
+var LESSONS_KEY = "smartlearn-lessons-custom";
+
+var seedLessons = [
+  { id: "seed-math", subject: "Mathematics", title: "Algebra basics: solving linear equations", description: "Placeholder video — tutors replace via Admin. Learn the 2x + 5 = 15 method step by step.", tutor: "Mrs. Ada", type: "mp4", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+  { id: "seed-science", subject: "Science", title: "Cells and energy: an intro", description: "Placeholder video — tutors replace via Admin. Mitochondria, states of matter, forces.", tutor: "Mr. Bala", type: "mp4", url: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" },
+  { id: "seed-english", subject: "English", title: "Clear sentences: verbs and paragraphs", description: "Placeholder video — tutors replace via Admin. Find verbs, build 5-sentence paragraphs.", tutor: "Ms. Cruz", type: "mp4", url: "https://www.w3schools.com/html/movie.mp4" },
+  { id: "seed-history", subject: "History", title: "Timelines: Stone Age to Independence", description: "Placeholder video — tutors replace via Admin. Order events, causes and effects.", tutor: "Mr. Diallo", type: "mp4", url: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" }
+];
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+  });
+}
+
+function youtubeEmbedId(url) {
+  var s = String(url || "").trim();
+  var m = s.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+  if (m) return m[1];
+  if (/^[A-Za-z0-9_-]{6,}$/.test(s)) return s;
+  return "";
+}
+
+function getCustomLessons() {
+  var v = loadJSON(LESSONS_KEY, null);
+  return Array.isArray(v) ? v : [];
+}
+function saveCustomLessons(v) { saveJSON(LESSONS_KEY, v); }
+function getAllLessons() { return seedLessons.concat(getCustomLessons()); }
+function watchedKey() { return "smartlearn-" + getUser() + "-watched-lessons"; }
+function getWatched() {
+  var v = loadJSON(watchedKey(), null);
+  return Array.isArray(v) ? v : [];
+}
+function saveWatched(v) { saveJSON(watchedKey(), v); }
+function isValidLesson(item) {
+  return item && typeof item.title === "string" && item.title.trim().length > 0 &&
+    quizData[item.subject] !== undefined &&
+    typeof item.url === "string" && item.url.trim().length > 0 &&
+    (item.type === "mp4" || item.type === "youtube");
+}
+
 function refreshProgressUI() {
   var cards = document.querySelectorAll(".subject-card");
   var completed = getCompleted();
@@ -531,6 +577,158 @@ if (randomBtn && randomPick) {
   if (userSelect) userSelect.addEventListener("change", paintList);
 
   paintList();
+})();
+
+// ---- Lessons student page (watch) ----
+(function initLessonsPage() {
+  var grid = document.getElementById("lessonGrid");
+  if (!grid) return; // only on lessons.html
+  var searchEl = document.getElementById("lessonSearch");
+  var filterEl = document.getElementById("lessonFilter");
+  var countEl = document.getElementById("lessonCount");
+  var emptyEl = document.getElementById("lessonEmpty");
+  var progEl = document.getElementById("lessonProgress");
+
+  function playerHtml(lesson) {
+    if (lesson.type === "youtube") {
+      var id = youtubeEmbedId(lesson.url);
+      if (!id) return "<p class='muted'>Invalid YouTube link.</p>";
+      return "<div class='video-wrap'><iframe src='https://www.youtube.com/embed/" + id + "' title='" + escapeHtml(lesson.title) + "' allow='accelerometer; encrypted-media; picture-in-picture' allowfullscreen loading='lazy'></iframe></div>";
+    }
+    return "<div class='video-wrap'><video controls preload='metadata' playsinline src='" + escapeHtml(lesson.url) + "'></video></div>";
+  }
+
+  function paint() {
+    var q = searchEl ? searchEl.value.toLowerCase().trim() : "";
+    var f = filterEl ? filterEl.value : "";
+    var watched = getWatched();
+    var all = getAllLessons().filter(function (l) {
+      var okSubject = !f || l.subject === f;
+      var hay = (l.title + " " + l.description + " " + l.subject + " " + l.tutor).toLowerCase();
+      return okSubject && hay.indexOf(q) !== -1;
+    });
+    if (countEl) countEl.textContent = "Showing " + all.length + " of " + getAllLessons().length + " lessons.";
+    if (emptyEl) emptyEl.hidden = all.length !== 0;
+    if (progEl) {
+      var n = watched.length;
+      progEl.textContent = n ? ("Watched " + n + " lesson" + (n === 1 ? "" : "s") + " as " + (USER_NAMES[getUser()] || getUser()) + ".") : "Nothing marked watched yet — press Play, then Mark Watched.";
+    }
+    var html = "";
+    all.forEach(function (l) {
+      var done = watched.indexOf(l.id) !== -1;
+      html += "<article class='card' data-lesson-id='" + escapeHtml(l.id) + "'>" +
+        "<h3>" + escapeHtml(l.title) + "</h3>" +
+        "<p class='muted lesson-meta'>" + escapeHtml(l.subject) + " · Tutor: " + escapeHtml(l.tutor || "Tutor") + (done ? " · Watched ✓" : "") + "</p>" +
+        playerHtml(l) +
+        "<p>" + escapeHtml(l.description || "") + "</p>" +
+        "<button type='button' class='btn btn-small watched-btn" + (done ? " watched" : " btn-outline") + "' data-watched-id='" + escapeHtml(l.id) + "'>" + (done ? "Watched ✓" : "Mark Watched") + "</button></article>";
+    });
+    grid.innerHTML = html;
+    grid.querySelectorAll("[data-watched-id]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var id = b.getAttribute("data-watched-id");
+        var w = getWatched();
+        var i = w.indexOf(id);
+        if (i === -1) w.push(id);
+        else w.splice(i, 1);
+        saveWatched(w);
+        paint();
+      });
+    });
+  }
+
+  if (searchEl) searchEl.addEventListener("input", paint);
+  if (filterEl) filterEl.addEventListener("change", paint);
+  if (userSelect) userSelect.addEventListener("change", paint);
+  paint();
+})();
+
+// ---- Lessons tutor upload (admin page) ----
+(function initLessonAdmin() {
+  var form = document.getElementById("addLessonForm");
+  if (!form) return; // only on admin.html
+  var subjectEl = document.getElementById("lSubject");
+  var titleEl = document.getElementById("lTitle");
+  var descEl = document.getElementById("lDesc");
+  var tutorEl = document.getElementById("lTutor");
+  var typeEl = document.getElementById("lType");
+  var urlEl = document.getElementById("lUrl");
+  var fileEl = document.getElementById("lFile");
+  var previewWrap = document.getElementById("lPreviewWrap");
+  var preview = document.getElementById("lPreview");
+  var msgEl = document.getElementById("addLessonMsg");
+  var listEl = document.getElementById("lessonAdminList");
+  var filterEl = document.getElementById("lessonAdminFilter");
+
+  if (fileEl) fileEl.addEventListener("change", function () {
+    var f = fileEl.files && fileEl.files[0];
+    if (!f) { previewWrap.hidden = true; preview.removeAttribute("src"); return; }
+    preview.src = URL.createObjectURL(f);
+    previewWrap.hidden = false;
+    msgEl.textContent = "Previewing '" + f.name + "' for this session. To share it, publish an MP4 link instead — files are not saved.";
+  });
+
+  function paintAdminList() {
+    var data = getCustomLessons();
+    var f = filterEl ? filterEl.value : "";
+    var rows = data.filter(function (l) { return !f || l.subject === f; });
+    if (!rows.length) {
+      listEl.innerHTML = "<p class='muted'>No uploaded lessons yet. Publish one above — it appears for every mock user.</p>";
+      return;
+    }
+    var html = "";
+    rows.forEach(function (l) {
+      html += "<div class='custom-item'><strong>" + escapeHtml(l.subject) + ":</strong> " + escapeHtml(l.title) +
+        "<br /><span class='muted'>Tutor: " + escapeHtml(l.tutor || "Tutor") + " · " + (l.type === "youtube" ? "YouTube" : "MP4") + "</span>" +
+        "<br /><button type='button' class='btn btn-small btn-outline' data-del-lesson='" + escapeHtml(l.id) + "'>Delete</button></div>";
+    });
+    listEl.innerHTML = html;
+    listEl.querySelectorAll("[data-del-lesson]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var id = b.getAttribute("data-del-lesson");
+        saveCustomLessons(getCustomLessons().filter(function (l) { return l.id !== id; }));
+        paintAdminList();
+      });
+    });
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var item = {
+      id: "custom-" + Date.now().toString(36),
+      subject: subjectEl.value,
+      title: titleEl.value.trim(),
+      description: descEl.value.trim(),
+      tutor: tutorEl.value.trim() || "Tutor",
+      type: typeEl.value,
+      url: urlEl.value.trim()
+    };
+    if (item.type === "youtube" && !youtubeEmbedId(item.url)) {
+      msgEl.textContent = "Enter a valid YouTube link or video ID.";
+      return;
+    }
+    if (!isValidLesson(item)) {
+      msgEl.textContent = "Fill the title and video link.";
+      return;
+    }
+    var d = getCustomLessons();
+    d.push(item);
+    saveCustomLessons(d);
+    form.reset();
+    if (preview) { preview.removeAttribute("src"); }
+    if (previewWrap) previewWrap.hidden = true;
+    msgEl.textContent = "Published '" + item.title + "' — visible to all mock users on Lessons.";
+    paintAdminList();
+  });
+
+  if (filterEl) filterEl.addEventListener("change", paintAdminList);
+  var clearBtn = document.getElementById("clearLessonsBtn");
+  if (clearBtn) clearBtn.addEventListener("click", function () {
+    saveCustomLessons([]);
+    paintAdminList();
+  });
+
+  paintAdminList();
 })();
 
 refreshProgressUI();

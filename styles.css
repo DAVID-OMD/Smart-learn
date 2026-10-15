@@ -389,6 +389,32 @@ main .card + .card {
   background: var(--card);
 }
 
+.video-wrap {
+  margin: 0.6rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-wrap video,
+.video-wrap iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #000;
+}
+
+.lesson-meta {
+  font-size: 0.9rem;
+}
+
+.watched-btn.watched {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+}
+
 summary {
   cursor: pointer;
   font-weight: bold;

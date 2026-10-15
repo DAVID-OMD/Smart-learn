@@ -14,6 +14,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="subjects.html">Subjects</a></li>
+        <li><a href="lessons.html">Lessons</a></li>
         <li><a href="admin.html" class="active">Admin</a></li>
       </ul>
       <div class="nav-tools">
@@ -110,6 +111,69 @@
         <button type="button" id="importBtn" class="btn btn-small">Import</button>
       </div>
       <p id="importMsg" class="muted" aria-live="polite"></p>
+    </section>
+
+    <section class="card">
+      <h2>Upload a video lesson (tutors)</h2>
+      <p class="muted">Shared library: lessons added here are visible to every mock user on the Lessons page. Video bytes are never stored — save a link (MP4 URL or YouTube) or pick a local file for instant session preview.</p>
+      <form id="addLessonForm">
+        <div class="form-row">
+          <label for="lSubject">Subject</label>
+          <select id="lSubject">
+            <option>Mathematics</option>
+            <option>Science</option>
+            <option>English</option>
+            <option>History</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="lTitle">Lesson title</label>
+          <input type="text" id="lTitle" maxlength="120" placeholder="e.g. Algebra basics in 10 minutes" required />
+        </div>
+        <div class="form-row">
+          <label for="lDesc">Description</label>
+          <input type="text" id="lDesc" maxlength="240" placeholder="What will students learn?" />
+        </div>
+        <div class="form-row">
+          <label for="lTutor">Tutor name</label>
+          <input type="text" id="lTutor" maxlength="60" placeholder="e.g. Mrs. Ada" />
+        </div>
+        <div class="form-row">
+          <label for="lType">Video type</label>
+          <select id="lType">
+            <option value="mp4">MP4 link</option>
+            <option value="youtube">YouTube (embed link or ID)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="lUrl">Video link</label>
+          <input type="text" id="lUrl" maxlength="500" placeholder=https://...mp4 or https://www.youtube.com/watch?v=... " required />
+        </div>
+        <div class="form-row">
+          <label for="lFile">Or preview a local video file (session only, not saved)</label>
+          <input type="file" id="lFile" accept="video/*" />
+        </div>
+        <div class="video-wrap" id="lPreviewWrap" hidden>
+          <video id="lPreview" controls preload="metadata" playsinline></video>
+        </div>
+        <button type="submit" class="btn">Publish Lesson</button>
+        <p id="addLessonMsg" class="muted" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Uploaded lessons</h2>
+      <div class="toolbar">
+        <select id="lessonAdminFilter" aria-label="Filter uploaded lessons by subject">
+          <option value="">All subjects</option>
+          <option>Mathematics</option>
+          <option>Science</option>
+          <option>English</option>
+          <option>History</option>
+        </select>
+        <button type="button" id="clearLessonsBtn" class="btn btn-small btn-outline">Delete All Uploaded</button>
+      </div>
+      <div id="lessonAdminList"></div>
     </section>
   </main>
 

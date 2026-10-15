@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartLearn - Video Lessons</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="index.html" class="logo">SmartLearn</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="subjects.html">Subjects</a></li>
+        <li><a href="lessons.html" class="active">Lessons</a></li>
+        <li><a href="admin.html">Admin</a></li>
+      </ul>
+      <div class="nav-tools">
+        <label class="auth-label" for="userSelect">Mock user:</label>
+        <select id="userSelect" aria-label="Mock user">
+          <option value="guest">Guest</option>
+          <option value="test-student">Test Student</option>
+          <option value="demo-teacher">Demo Teacher</option>
+        </select>
+        <button type="button" id="themeToggle" class="btn btn-small theme-btn" aria-label="Toggle dark mode">Dark mode</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Video Lessons <span class="muted">(learn)</span></h1>
+    <p>Watch tutor lessons first, then test yourself on the <a href="subjects.html">Subjects quiz page</a>. Seed videos are placeholders — tutors replace them via the Admin page.</p>
+    <p id="lessonProgress" class="muted" aria-live="polite"></p>
+
+    <div class="toolbar">
+      <input type="text" id="lessonSearch" placeholder="Search lessons... e.g. algebra" aria-label="Search lessons" />
+      <select id="lessonFilter" aria-label="Filter lessons by subject">
+        <option value="">All subjects</option>
+        <option>Mathematics</option>
+        <option>Science</option>
+        <option>English</option>
+        <option>History</option>
+      </select>
+    </div>
+    <p id="lessonCount" class="muted"></p>
+
+    <div id="lessonGrid" class="card-grid"></div>
+    <p id="lessonEmpty" class="muted" hidden>No lessons match. Tutors can add some on the Admin page.</p>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 SmartLearn. Built for secondary school learners.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
