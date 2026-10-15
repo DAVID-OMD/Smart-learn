@@ -86,6 +86,7 @@
       "name": "SmartLearn Today",
       "description": "Study suggestion and progress at a glance.",
       "tag": "smartlearn-today",
+      "template": "smartlearn-today",
       "start_url": "./widget.html",
       "screenshots": [
         { "src": "screenshots/home-mobile.png", "sizes": "390x844", "label": "SmartLearn Today widget" }
