@@ -12,7 +12,9 @@ var SHELL = [
   "./script.js",
   "./manifest.json",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/icon-512.png",
+  "./screenshots/lessons-wide.png",
+  "./screenshots/home-mobile.png"
 ];
 
 self.addEventListener("install", function (event) {

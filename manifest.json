@@ -1,12 +1,19 @@
 {
+  "id": "/Smart-learn/index.html",
   "name": "SmartLearn",
   "short_name": "SmartLearn",
   "description": "Secondary school learning: video lessons plus quizzes. Works offline.",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education"],
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#1e40af",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icons/icon-192.png",
@@ -17,6 +24,34 @@
       "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/lessons-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "SmartLearn home page preview"
+    },
+    {
+      "src": "screenshots/home-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "SmartLearn on mobile"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Watch Lessons",
+      "url": "./lessons.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Take Quizzes",
+      "url": "./subjects.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
