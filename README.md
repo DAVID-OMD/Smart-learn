@@ -16,6 +16,11 @@ Smart-learn/
 ├── design.html     # Design preview
 ├── lessons.html    # Phase video lessons: watch (learn part)
 ├── admin.html      # Phase 3 teacher editing + tutor lesson uploads
+├── manifest.json   # PWA manifest (for APK via PWABuilder)
+├── sw.js           # Service worker (offline shell)
+├── icons/
+│   ├── icon-192.png
+│   └── icon-512.png
 ├── PRD.md          # Plan + notes
 ├── db/
 │   ├── schema.sql  # Phase 2 local SQLite schema (mock)

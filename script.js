@@ -731,4 +731,14 @@ if (randomBtn && randomPick) {
   paintAdminList();
 })();
 
+// ---- PWA: register service worker (http/https only; skipped on file://) ----
+(function initSW() {
+  if (!("serviceWorker" in navigator)) return;
+  var proto = window.location.protocol;
+  if (proto !== "http:" && proto !== "https:") return;
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  });
+})();
+
 refreshProgressUI();
