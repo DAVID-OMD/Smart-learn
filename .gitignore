@@ -1,0 +1,4 @@
+# Local-only: PWABuilder output + Android signing keys. Never commit these.
+smartlearna/
+*.keystore
+*.jks
